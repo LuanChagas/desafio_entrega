@@ -1,0 +1,13 @@
+.layoutSideMain {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  height: calc(100% - (1rem * 2) - 37px);
+}
+
+.paddingContainer {
+  padding: 1rem;
+}
+
+.containerMain{
+  padding: 1rem .5rem;
+}

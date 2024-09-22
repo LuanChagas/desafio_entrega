@@ -1,0 +1,35 @@
+.container {
+  height: 100%;
+  background-color: #cbd5e1;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+  0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+.container ul{
+  margin-top: 50px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.container a{
+  text-decoration: none;
+  color: #334155;
+}
+
+.active{
+  animation: 110ms ease-in-out borderAnimation forwards;
+}
+
+@keyframes borderAnimation{
+  from {
+    
+   border-bottom: none;
+   border-bottom-width: 1px;
+  }
+  to {
+    border-bottom: 1px solid #334155;
+    width: 20px;
+    border-bottom-width: 2px;
+  }
+}

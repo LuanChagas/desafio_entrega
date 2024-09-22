@@ -1,0 +1,21 @@
+
+.container{
+    width: 100%;
+}
+
+.card{
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.card_content{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card_content >div{
+    display: flex;
+    gap: 10px;
+    align-items: end;
+    font-size: small;
+}
