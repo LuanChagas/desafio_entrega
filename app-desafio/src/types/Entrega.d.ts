@@ -3,9 +3,9 @@ interface Entrega {
   nomeCliente: string;
   dataEntrega: Date;
   pontoPartida: string;
-  pontoPartidaDados: DadosViaCepSucesso
+  pontoPartidaDados: string
   pontoDestino: string;
-  pontoDestinoDados: DadosViaCepSucesso
+  pontoDestinoDados: string
   criadoEm: Date;
 }
 

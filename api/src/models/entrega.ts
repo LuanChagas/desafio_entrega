@@ -29,7 +29,7 @@ export class Entrega {
     pontoPartida: string
 
     @IsNotEmpty()
-    @ValidateNested()
+    @IsString()
     @Column({
         name: "ponto_partida_dados",
         type: "json"
@@ -44,7 +44,7 @@ export class Entrega {
     pontoDestino: string
 
     @IsNotEmpty()
-    @ValidateNested()
+    @IsString()
     @Column({
         name: "ponto_destino_dados",
         type: "json"

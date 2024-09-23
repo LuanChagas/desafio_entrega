@@ -20,3 +20,7 @@ export const maskValidacaoCep = (target: HTMLInputElement) => {
 
     return false
 }
+
+export const tratarStringRua = (rua: string) => {
+    return rua.trim().replace(/\s+/g, '+')
+}

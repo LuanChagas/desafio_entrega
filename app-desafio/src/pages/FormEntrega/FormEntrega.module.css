@@ -20,7 +20,7 @@
 
 }
 
-.form > div > input{
+.form > div > input,.secaoPonto input{
   padding: .5rem;
   height: 40px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -36,11 +36,34 @@
   justify-content: flex-start;
 }
 
-.containerInfoCEP{
-  height: 200px;
+.secaoPonto {
+  width: 100%;
   display: flex;
-  align-items: center;
+  gap: 10px;
+}
+.secaoPonto input{
+  width: 100%;
+}
+
+.secaoPonto button{
+  background-color: #2F4858;
+  cursor: pointer;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.secaoPonto button:hover{
+  background-color: #93B7BE;
+  color: #1f2937;
+
+}
+.containerInfoDados{
+  height: 300px;
+  display: flex;
   justify-content: center;
+  overflow-y: auto;
 }
 
 .layoutInfo{
@@ -74,17 +97,20 @@
 .button{
   width: 220px;
   padding: 1rem;
-  background-color: #93c5fd;
-  border: 1px solid #93c5fd;
+  background-color: #2F4858;
+  border: 1px solid #2F4858;
   border-radius: 5px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   color: #1f2937;
   letter-spacing: 1px;
   font-weight: 500;
+  color: white;
+  cursor:pointer
 }
 
 .button:hover{
-  background-color: #4b97ee;
+  background-color: #93B7BE;
+  color: #1f2937;
 }
 
 .disable{

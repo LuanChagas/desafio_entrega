@@ -1,6 +1,6 @@
 .listaLayout {
   display: grid;
-  grid-template-rows: 50px 1fr;
+  grid-template-rows: 50px calc(100vh - 150px);
   height: 100%;
  
 }
@@ -31,7 +31,6 @@
 }
 
 .layoutEntregas a{
-
   display: block;
   cursor: pointer;
 }

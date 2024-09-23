@@ -46,22 +46,9 @@ const CardLista = ({ dados }: CardFormPropos) => {
 
                             <div className={style.layoutDadosItens}>
                                 <div>
-                                    <span className={style.titulo}>Logradouro:</span>
-                                    <span>{dados.pontoPartidaDados.logradouro}</span>
+                                    <span className={style.titulo}>Localização:</span>
+                                    <span>{dados.pontoPartidaDados}</span>
                                 </div>
-                                <div>
-                                    <span className={style.titulo}>Bairro:</span>
-                                    <span>{dados.pontoPartidaDados.bairro}</span>
-                                </div>
-                                <div>
-                                    <span className={style.titulo}>Cidade:</span>
-                                    <span>{dados.pontoPartidaDados.localidade}</span>
-                                </div>
-                                <div>
-                                    <span className={style.titulo}>Estado:</span>
-                                    <span>{dados.pontoPartidaDados.estado}</span>
-                                </div>
-
                             </div>
                         </div>
                         <div>
@@ -72,22 +59,9 @@ const CardLista = ({ dados }: CardFormPropos) => {
 
                             <div className={style.layoutDadosItens}>
                                 <div>
-                                    <span className={style.titulo}>Logradouro:</span>
-                                    <span>{dados.pontoDestinoDados.logradouro}</span>
+                                    <span className={style.titulo}>Localização:</span>
+                                    <span>{dados.pontoDestinoDados}</span>
                                 </div>
-                                <div>
-                                    <span className={style.titulo}>Bairro:</span>
-                                    <span>{dados.pontoDestinoDados.bairro}</span>
-                                </div>
-                                <div>
-                                    <span className={style.titulo}>Cidade:</span>
-                                    <span>{dados.pontoDestinoDados.localidade}</span>
-                                </div>
-                                <div>
-                                    <span className={style.titulo}>Estado:</span>
-                                    <span>{dados.pontoDestinoDados.estado}</span>
-                                </div>
-
                             </div>
                         </div>
                     </div>

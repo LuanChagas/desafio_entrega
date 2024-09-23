@@ -5,23 +5,23 @@ import style from "./FormEntrega.module.css";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { cadastrarEntrega } from "../../services/api";
-import { ChangeEvent, useState } from "react";
-import { buscarDadosCepApi } from "../../services/viaCep-api";
 import CardForm from "../../components/Cards/CardForm";
-import { maskValidacaoCep } from "../../utils/mask-input.";
 import { LoaderCircle, SearchX } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { buscarDadosNomatinApi } from "../../services/nominatim-api";
+import { useState } from "react";
+import { tratarStringRua } from "../../utils/mask-input.";
 
-interface schemaDadosCep {
+interface schemaDadosApi {
   loading: boolean,
   error: boolean,
-  dados: DadosViaCepSucesso | undefined
+  dados: DadosNomatinApi[] | undefined
 }
 
-interface DadosCep {
-  [key: string]: schemaDadosCep
+interface DadosApi {
+  [key: string]: schemaDadosApi
 }
-const initDadosCep: schemaDadosCep = {
+const initDadosApi: schemaDadosApi = {
   loading: false,
   error: false,
   dados: undefined
@@ -30,47 +30,56 @@ const FormEntrega = () => {
 
   const navigate = useNavigate()
 
-  const [dadosCep, setDadosCep] = useState<DadosCep>({
-    partida: initDadosCep,
-    destino: initDadosCep
+  const [dadosApi, setDadosCep] = useState<DadosApi>({
+    partida: initDadosApi,
+    destino: initDadosApi
   })
+
+  const [idTimout, setIdTimout] = useState(0)
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    setValue,
+    getValues,
+    formState: { errors, isValid, },
   } = useForm<FormEntrega>();
 
 
-  const handleOnChangeCep = async (e: ChangeEvent<HTMLInputElement>, tipo: "partida" | "destino") => {
-    if (!maskValidacaoCep(e.target)) {
-      return
-    };
-    if (e.target.value === dadosCep[tipo].dados?.cep) {
-      return
+
+  const pesquisarDados = async (tipo: "partida" | "destino") => {
+    let rua = ''
+    if (tipo === "partida") {
+      rua = getValues().pontoPartida
+    } else {
+      rua = getValues().pontoDestino
     }
-    setDadosCep({ ...dadosCep, [tipo]: { dados: undefined, error: false, loading: false } })
-    const cep = e.target.value
-    if (cep.replace('-', "").length === 8) {
-      setDadosCep({ ...dadosCep, [tipo]: { dados: undefined, error: false, loading: true } })
-      const dados = await buscarDadosCepApi(cep)
-      if ('erro' in dados) {
-        setDadosCep({ ...dadosCep, [tipo]: { dados: undefined, error: true, loading: false } })
-        return
-      }
-      setDadosCep({ ...dadosCep, [tipo]: { dados: dados, error: false, loading: false } })
-    }
+    tratarStringRua(rua)
+    buscarDadosNomatinApiDebounce(rua, tipo)
   }
+
+
+  const buscarDadosNomatinApiDebounce = (rua: string, tipo: "partida" | "destino") => {
+    if (!rua) return
+    setDadosCep({ ...dadosApi, [tipo]: { dados: undefined, error: false, loading: true } })
+    clearTimeout(idTimout)
+    const id = setTimeout(async () => {
+      const dados = await buscarDadosNomatinApi(rua);
+      setDadosCep({ ...dadosApi, [tipo]: { dados: dados, error: false, loading: false } })
+    }, 1000)
+    setIdTimout(id)
+  }
+
   const onSubmit: SubmitHandler<FormEntrega> = async (data) => {
-    if (!dadosCep.partida.dados || !dadosCep.destino.dados) return
-    data.pontoPartidaDados = dadosCep.partida.dados
-    data.pontoDestinoDados = dadosCep.destino.dados
+    if (!dadosApi.partida.dados || !dadosApi.destino.dados) return
     const response = await cadastrarEntrega(data)
     if (response.status === 201) {
       navigate("/listar")
     }
   };
+
+
 
   return (
     <section>
@@ -113,52 +122,60 @@ const FormEntrega = () => {
           />
         </div>
         <div className={style.justifyStart}>
-          <label htmlFor="partida">Ponto de partida (cep)</label>
+          <label htmlFor="partida">Ponto de partida</label>
           {errors.pontoPartida?.type === "required" && <ErrorForm campo={"Ponto de partida"} />}
-          <input
-            type="text"
-            id="partida"
-            placeholder="00000-000"
-            {...register("pontoPartida",
-              {
-                required: true,
-                onChange: (e) => {
-                  handleOnChangeCep(e, "partida")
-                }
-              })}
-          />
-          <div className={style.containerInfoCEP}>
-            {dadosCep.partida.loading && (<Loading />)}
-            {dadosCep.partida.error && (<CepNaoEncontrado />)}
-            {dadosCep.partida.dados && (<CardForm dadosCep={dadosCep.partida.dados} />)}
+          <div className={style.secaoPonto}>
+            <input
+              type="text"
+              id="partida"
+              placeholder="Avenida lorem ipsum"
+              {...register("pontoPartida",
+                {
+                  required: true,
+                })}
+            />
+            <button
+              type="button"
+              onClick={() => pesquisarDados("partida")}
+            >Pesquisar</button>
+          </div>
+
+          <div className={style.containerInfoDados}>
+            {dadosApi.partida.loading && (<Loading />)}
+            {dadosApi.partida.error && (<CepNaoEncontrado />)}
+            {dadosApi.partida.dados && (<CardForm dadosApi={dadosApi.partida.dados} pontoTipo="partida" setValue={setValue} />)}
           </div>
         </div>
         <div className={style.justifyStart}>
-          <label htmlFor="destino">Ponto de destino (cep)</label>
+          <label htmlFor="destino">Ponto de destino</label>
           {errors.pontoDestino?.type === "required" && <ErrorForm campo={"Ponto de destino"} />}
-          <input
-            type="text"
-            id="destino"
-            placeholder="00000-000"
-            {...register("pontoDestino",
-              {
-                required: true,
-                onChange: (e) =>
-                  handleOnChangeCep(e, "destino")
-              })}
-          />
-          <div className={style.containerInfoCEP}>
-            {dadosCep.destino.loading && (<Loading />)}
-            {dadosCep.destino.dados && (<CardForm dadosCep={dadosCep.destino.dados} />)}
-            {dadosCep.destino.error && (<CepNaoEncontrado />)}
+          <div className={style.secaoPonto}>
+            <input
+              type="text"
+              id="destino"
+              placeholder="Avenida lorem ipsum"
+              {...register("pontoDestino",
+                {
+                  required: true,
+                })}
+            />
+            <button
+              type="button"
+              onClick={() => pesquisarDados("destino")}
+            >Pesquisar</button>
+          </div>
+
+          <div className={style.containerInfoDados}>
+            {dadosApi.destino.loading && (<Loading />)}
+            {dadosApi.destino.dados && (<CardForm dadosApi={dadosApi.destino.dados} pontoTipo="destino" setValue={setValue} />)}
+            {dadosApi.destino.error && (<CepNaoEncontrado />)}
           </div>
         </div>
         <div className={style.secaoButton}>
-          <button type="submit" className={style.button + ` ${!isValid || !dadosCep.destino.dados || !dadosCep.partida.dados ? style.disable : ''}`}
-            disabled={!isValid || !dadosCep.destino.dados || !dadosCep.partida.dados}
+          <button type="submit" className={style.button + ` ${!isValid || !dadosApi.destino.dados || !dadosApi.partida.dados ? style.disable : ''}`}
+            disabled={!isValid || !dadosApi.destino.dados || !dadosApi.partida.dados}
           >Cadastrar</button>
         </div>
-
       </form>
     </section>
   );

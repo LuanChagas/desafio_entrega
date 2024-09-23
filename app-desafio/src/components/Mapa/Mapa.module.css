@@ -1,9 +1,9 @@
 .loadingAviso{
     position: absolute;
-    top: 70%;
-    left: 40%;
-    right: 30%;
-    bottom: 20%;
+    top: 50%;
+    left: 60%;
+    right: 20%;
+    bottom: 35%;
     display: flex;
     align-items:  center;
     justify-content: center;
