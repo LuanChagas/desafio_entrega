@@ -3,7 +3,6 @@
     
 }
 
-
 .card{
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     height: 100%;
@@ -20,8 +19,7 @@
 
 .layoutSuperior{
     display: flex;
-    justify-content: space-between;
-    gap:3rem
+    flex-direction: column;
 }
 .layoutSuperiorTitulo,.layoutInferiorTitulo{
     display: flex;

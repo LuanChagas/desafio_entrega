@@ -33,17 +33,28 @@ const ListaEntrega = () => {
 
   return <section className={style.listaLayout}>
     <h2 className={style.titulo}>Entregas</h2>
-    <ul className={style.layoutEntregas}>
-      {data?.map(entrega => (
-        <li key={entrega.id} className={select === entrega.id ? `${style.select}` : ''}><a onClick={() => obterCoordenadas(entrega)}><CardLista dados={entrega} /></a>
-        </li>
-      ))}
-    </ul>
-    <div>
-      {coordenadas && <Mapa origin={coordenadas?.origin} destination={coordenadas?.destination} />}
+    {!data || data.length === 0 ?
+      <div className={style.secaoNaoHaDados}>
+        <span>Não há dados</span>
+      </div>
+      :
+      <div className={style.layoutConteudo}>
+        <ul className={style.layoutEntregas}>
+          {data?.map(entrega => (
+            <li key={entrega.id} className={select === entrega.id ? `${style.select}` : ''}>
+              <a onClick={() => obterCoordenadas(entrega)}>
+                <CardLista dados={entrega} />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div>
+          {coordenadas && <Mapa origin={coordenadas?.origin} destination={coordenadas?.destination} />}
+        </div>
+      </div>
+    }
 
-    </div>
-  </section>;
+  </section >;
 };
 
 export default ListaEntrega;

@@ -113,11 +113,12 @@ const FormEntrega = () => {
           />
         </div>
         <div className={style.justifyStart}>
-          <label htmlFor="partida">Ponto de partida</label>
+          <label htmlFor="partida">Ponto de partida (cep)</label>
           {errors.pontoPartida?.type === "required" && <ErrorForm campo={"Ponto de partida"} />}
           <input
             type="text"
             id="partida"
+            placeholder="00000-000"
             {...register("pontoPartida",
               {
                 required: true,
@@ -133,11 +134,12 @@ const FormEntrega = () => {
           </div>
         </div>
         <div className={style.justifyStart}>
-          <label htmlFor="destino">Ponto de destino</label>
+          <label htmlFor="destino">Ponto de destino (cep)</label>
           {errors.pontoDestino?.type === "required" && <ErrorForm campo={"Ponto de destino"} />}
           <input
             type="text"
             id="destino"
+            placeholder="00000-000"
             {...register("pontoDestino",
               {
                 required: true,

@@ -1,6 +1,6 @@
 .listaLayout {
   display: grid;
-  grid-template-rows: 50px 40vh 1fr;
+  grid-template-rows: 50px 1fr;
   height: 100%;
  
 }
@@ -15,16 +15,23 @@
     align-items: flex-end;
 }
 
-.layoutEntregas{
+.layoutConteudo{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
+}
+
+.layoutEntregas{
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  overflow-y: auto;
+  overflow-Y: auto;
+  overflow-x: hidden;
   list-style: none;
   padding: 1rem;
 }
 
 .layoutEntregas a{
+
   display: block;
   cursor: pointer;
 }
@@ -35,4 +42,10 @@
   scale: 1.03;
   border-radius: 5px;
   transition: 300ms ease-out;
+}
+
+.secaoNaoHaDados{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

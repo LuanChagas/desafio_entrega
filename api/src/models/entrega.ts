@@ -1,53 +1,66 @@
+import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
-@Entity({name:"entregas"})
+@Entity({ name: "entregas" })
 export class Entrega {
-    
+
     @PrimaryGeneratedColumn()
     id: number;
 
+    @IsNotEmpty()
+    @IsString()
     @Column({
-        name:"nome_cliente"
+        name: "nome_cliente"
     })
     nomeCliente: string;
 
-    @Column("date",{
-        name:"data_entrega"
+    @IsNotEmpty()
+    @IsString()
+    @Column("date", {
+        name: "data_entrega"
     })
     dataEntrega: Date
 
+    @IsNotEmpty()
+    @IsString()
     @Column({
-        name:"ponto_partida"
+        name: "ponto_partida"
     })
-    pontoPartida:string
+    pontoPartida: string
 
+    @IsNotEmpty()
+    @ValidateNested()
     @Column({
-        name:"ponto_partida_dados",
-        type:"json"
+        name: "ponto_partida_dados",
+        type: "json"
     })
-    pontoPartidaDados:string
+    pontoPartidaDados: string
 
+    @IsNotEmpty()
+    @IsString()
     @Column({
-        name:"ponto_destino"
+        name: "ponto_destino"
     })
-    pontoDestino:string
+    pontoDestino: string
 
+    @IsNotEmpty()
+    @ValidateNested()
     @Column({
-        name:"ponto_destino_dados",
-        type:"json"
+        name: "ponto_destino_dados",
+        type: "json"
     })
-    pontoDestinoDados:string
+    pontoDestinoDados: string
 
-    @Column("timestamp",{
-        name:"criado_em",
+    @Column("timestamp", {
+        name: "criado_em",
     })
     criadoEm: Date
 
     @BeforeInsert()
-    updateCriadoEm(){
+    updateCriadoEm() {
         const atualData = new Date();
         const brData = new Date(atualData.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
         this.criadoEm = brData
     }
-   
+
 }

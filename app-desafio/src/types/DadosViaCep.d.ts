@@ -2,7 +2,7 @@
 
 interface DadosViaCepSucesso {
     cep: string
-    logradouro: string
+    logradouro?: string
     bairro: string
     localidade: string
     estado: string
