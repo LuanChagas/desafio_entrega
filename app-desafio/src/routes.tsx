@@ -9,6 +9,10 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        index: true, // Define esta rota como a rota padrão
+        element: <FormEntrega />,
+      },
+      {
         path: "cadastrar",
         element: <FormEntrega />,
       },

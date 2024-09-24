@@ -4,9 +4,9 @@ import { cadastrarEntregaService } from "../services/services"
 import { Entrega } from "../models/entrega"
 const routes = Router()
 
-routes.post('/entrega', async (req, res, next) => cadastrarEntregaController(req,res,next))
+routes.post('/api/entrega', async (req, res, next) => cadastrarEntregaController(req,res,next))
 
-  routes.get('/entregas',(req,res)=>{listarEntregasController(res)})
+  routes.get('/api/entregas',(req,res)=>{listarEntregasController(res)})
 
 
 

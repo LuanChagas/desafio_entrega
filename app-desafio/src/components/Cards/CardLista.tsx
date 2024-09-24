@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@mui/material";
-import { Calendar, MapPin, MapPinCheck, MapPinned, UserRound } from "lucide-react";
+import { Calendar, MapPin, MapPinCheck, UserRound } from "lucide-react";
 
 import style from "./CardLista.module.css"
 import { format } from "date-fns";
