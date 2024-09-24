@@ -1,8 +1,6 @@
 import { AppDataSource } from "../config/data-source";
 import { Entrega } from "../models/entrega";
 
-
-
 const entregaRepository = AppDataSource.getRepository(Entrega)
 
 export const cadastrarEntregaService = async (entrega:Entrega) => {

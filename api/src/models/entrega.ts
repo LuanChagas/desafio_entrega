@@ -62,5 +62,4 @@ export class Entrega {
         const brData = new Date(atualData.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
         this.criadoEm = brData
     }
-
 }

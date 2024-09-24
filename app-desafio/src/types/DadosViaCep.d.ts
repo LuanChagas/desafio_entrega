@@ -1,5 +1,3 @@
-
-
 interface DadosViaCepSucesso {
     cep: string
     logradouro?: string

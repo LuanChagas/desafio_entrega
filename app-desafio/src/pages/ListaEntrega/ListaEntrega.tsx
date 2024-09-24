@@ -4,6 +4,7 @@ import style from "./ListaEntrega.module.css";
 import Mapa from "../../components/Mapa/Mapa";
 import { useState } from "react";
 import CardLista from "../../components/Cards/CardLista";
+import Loading from "../../components/Shared/Loading";
 
 
 const ListaEntrega = () => {
@@ -30,15 +31,14 @@ const ListaEntrega = () => {
     })
   }
 
-
   if (isLoading) {
-    return <section className={style.listaLayout}>
-      <span>Carregando</span>
+    return <section className={style.secaoNaoHaDadosELoanding}>
+      <Loading />
     </section>
   }
 
   if (!data || data.length === 0) {
-    return <div className={style.secaoNaoHaDados}>
+    return <div className={style.secaoNaoHaDadosELoanding}>
       <span>Não há dados</span>
     </div>
   }

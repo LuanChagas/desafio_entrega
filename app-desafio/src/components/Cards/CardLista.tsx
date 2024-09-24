@@ -9,7 +9,6 @@ interface CardFormPropos {
     dados: Entrega
 }
 
-
 const CardLista = ({ dados }: CardFormPropos) => {
 
     const strokeWidth = 1.4

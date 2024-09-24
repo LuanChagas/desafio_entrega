@@ -6,36 +6,35 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { cadastrarEntrega } from "../../services/api";
 import CardForm from "../../components/Cards/CardForm";
-import { LoaderCircle, SearchX } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { buscarDadosNomatinApi } from "../../services/nominatim-api";
 import { useState } from "react";
-import { tratarStringRua } from "../../utils/mask-input.";
+import { isValidLocation, tratarStringRua } from "../../utils/utilitarios.";
+import Loading from "../../components/Shared/Loading";
+import ModalForm from "../../components/Shared/ModalForm";
+import DadosNaoEncontrado from "../../components/Shared/DadosNaoEncontrado.";
 
 interface schemaDadosApi {
   loading: boolean,
-  error: boolean,
   dados: DadosNomatinApi[] | undefined
 }
 
 interface DadosApi {
   [key: string]: schemaDadosApi
 }
+
 const initDadosApi: schemaDadosApi = {
   loading: false,
-  error: false,
   dados: undefined
 }
-const FormEntrega = () => {
 
+const FormEntrega = () => {
   const navigate = useNavigate()
 
-  const [dadosApi, setDadosCep] = useState<DadosApi>({
-    partida: initDadosApi,
-    destino: initDadosApi
-  })
-
-  const [idTimout, setIdTimout] = useState(0)
+  const [dadosApi, setDadosApi] = useState<DadosApi>({ partida: initDadosApi, destino: initDadosApi })
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const {
     register,
@@ -46,40 +45,24 @@ const FormEntrega = () => {
     formState: { errors, isValid, },
   } = useForm<FormEntrega>();
 
-
-
-  const pesquisarDados = async (tipo: "partida" | "destino") => {
-    let rua = ''
-    if (tipo === "partida") {
-      rua = getValues().pontoPartida
-    } else {
-      rua = getValues().pontoDestino
-    }
-    tratarStringRua(rua)
-    buscarDadosNomatinApiDebounce(rua, tipo)
-  }
-
-
-  const buscarDadosNomatinApiDebounce = (rua: string, tipo: "partida" | "destino") => {
-    if (!rua) return
-    setDadosCep({ ...dadosApi, [tipo]: { dados: undefined, error: false, loading: true } })
-    clearTimeout(idTimout)
-    const id = setTimeout(async () => {
-      const dados = await buscarDadosNomatinApi(rua);
-      setDadosCep({ ...dadosApi, [tipo]: { dados: dados, error: false, loading: false } })
-    }, 1000)
-    setIdTimout(id)
+  const pesquisarDados = async (value: string, tipo: "partida" | "destino") => {
+    if (!value) return
+    const endereco = tratarStringRua(value)
+    setDadosApi({ ...dadosApi, [tipo]: { dados: undefined, loading: true } })
+    const dados = await buscarDadosNomatinApi(endereco);
+    setDadosApi({ ...dadosApi, [tipo]: { dados: dados, loading: false } })
   }
 
   const onSubmit: SubmitHandler<FormEntrega> = async (data) => {
-    if (!dadosApi.partida.dados || !dadosApi.destino.dados) return
+    if (!isValidLocation(data.pontoPartida) || !isValidLocation(data.pontoDestino)) {
+      handleOpen()
+      return
+    }
     const response = await cadastrarEntrega(data)
     if (response.status === 201) {
       navigate("/listar")
     }
   };
-
-
 
   return (
     <section>
@@ -136,14 +119,15 @@ const FormEntrega = () => {
             />
             <button
               type="button"
-              onClick={() => pesquisarDados("partida")}
+              onClick={() => pesquisarDados(getValues().pontoPartida, "partida")}
             >Pesquisar</button>
           </div>
 
           <div className={style.containerInfoDados}>
             {dadosApi.partida.loading && (<Loading />)}
-            {dadosApi.partida.error && (<CepNaoEncontrado />)}
-            {dadosApi.partida.dados && (<CardForm dadosApi={dadosApi.partida.dados} pontoTipo="partida" setValue={setValue} />)}
+            {dadosApi.partida.dados?.length === 0 && (<DadosNaoEncontrado />)}
+            {dadosApi.partida.dados && dadosApi.partida.dados?.length > 0
+              && (<CardForm dadosApi={dadosApi.partida.dados} pontoTipo="partida" setValue={setValue} />)}
           </div>
         </div>
         <div className={style.justifyStart}>
@@ -161,26 +145,28 @@ const FormEntrega = () => {
             />
             <button
               type="button"
-              onClick={() => pesquisarDados("destino")}
+              onClick={() => pesquisarDados(getValues().pontoDestino, "destino")}
             >Pesquisar</button>
           </div>
 
           <div className={style.containerInfoDados}>
             {dadosApi.destino.loading && (<Loading />)}
-            {dadosApi.destino.dados && (<CardForm dadosApi={dadosApi.destino.dados} pontoTipo="destino" setValue={setValue} />)}
-            {dadosApi.destino.error && (<CepNaoEncontrado />)}
+            {dadosApi.destino.dados?.length === 0 && (<DadosNaoEncontrado />)}
+            {dadosApi.destino.dados && dadosApi.destino.dados?.length > 0
+              && (<CardForm dadosApi={dadosApi.destino.dados} pontoTipo="destino" setValue={setValue} />)}
           </div>
         </div>
         <div className={style.secaoButton}>
-          <button type="submit" className={style.button + ` ${!isValid || !dadosApi.destino.dados || !dadosApi.partida.dados ? style.disable : ''}`}
-            disabled={!isValid || !dadosApi.destino.dados || !dadosApi.partida.dados}
+          <button type="submit"
+            className={style.button + ` ${!isValid ? style.disable : ''}`}
+            disabled={!isValid}
           >Cadastrar</button>
         </div>
       </form>
+      <ModalForm open={open} handleClose={handleClose} />
     </section>
   );
 };
-
 
 interface ErrorFormProps {
   campo: string;
@@ -190,23 +176,5 @@ const ErrorForm = ({ campo }: ErrorFormProps) => {
   return <span className={style.error}>{campo} é obrigátorio</span>
 }
 
-const CepNaoEncontrado = () => {
-  return (
-    <div className={style.layoutInfo}>
-      <SearchX />
-      <span>CEP não encontrado</span>
-    </div>
-  )
-}
-
-const Loading = () => {
-  return (
-    <div className={style.layoutInfo}>
-      <LoaderCircle className={style.animationSpinner} />
-      <span>Carregando</span>
-    </div>
-  )
-
-}
 
 export default FormEntrega;

@@ -1,0 +1,33 @@
+.layout{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .animationSpinner {
+    animation: rotate 1s linear infinite;
+  }
+  
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .boxTitulo,.boxConteudo{
+   display: flex;
+   align-items: center;
+   gap: 10px;
+  }
+
+  .boxTitulo h5{
+    font-size: 1.2rem;
+  }
+
+.boxConteudo{
+  flex-direction: column;
+  font-size: .9rem;
+}

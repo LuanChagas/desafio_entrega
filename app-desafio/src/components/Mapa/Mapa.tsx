@@ -33,8 +33,6 @@ const Mapa = ({ origin, destination }: MapaProps) => {
         }}
       >
       </iframe>
-
-
     </section>
   );
 };

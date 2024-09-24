@@ -9,7 +9,6 @@ interface CardFormPropos {
     setValue: UseFormSetValue<FormEntrega>
 }
 
-
 const CardForm = ({ dadosApi, pontoTipo, setValue }: CardFormPropos) => {
 
     const strokeWidth = 1.4
@@ -38,13 +37,10 @@ const CardForm = ({ dadosApi, pontoTipo, setValue }: CardFormPropos) => {
                                     <span> {dados.display_name}</span>
                                 </CardContent>
                             </Card>
-
                         </a>
-
                     </li>
                 ))}
             </ul>
-
         </section>
     );
 };
